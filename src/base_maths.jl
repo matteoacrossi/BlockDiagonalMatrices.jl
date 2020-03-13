@@ -78,7 +78,7 @@ function Base.:-(B1::BlockDiagonal, B2::BlockDiagonal)
     end
 end
 
-Base.:-(M::AbstractMatrix, B::BlockDiagonal) = isdiag(M) ? Diagonal(M) - B : M - Matrix(B)
+Base.:-(M::AbstractMatrix, B::BlockDiagonal) = - (B - M)
 Base.:-(B::BlockDiagonal, M::AbstractMatrix) = isdiag(M) ? B - Diagonal(M) : Matrix(B) - M
 
 function Base.:-(B::BlockDiagonal, M::StridedMatrix)
