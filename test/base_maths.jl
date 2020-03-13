@@ -67,6 +67,63 @@ using Test
         end
     end  # Addition
 
+
+    @testset "Subtraction" begin
+        @testset "BlockDiagonal - BlockDiagonal" begin
+            @test b1 - b1 isa BlockDiagonal
+            @test Matrix(b1 - b1) == Matrix(b1) - Matrix(b1)
+            @test_throws DimensionMismatch b1 - b3
+        end
+
+        @testset "BlockDiagonal - Matrix" begin
+            @test b1 - Matrix(b1) isa Matrix
+            @test b1 - Matrix(b1) == b1 - b1
+            @test_throws DimensionMismatch b1 - Matrix(b3)
+
+            # Matrix - BlockDiagonal
+            @test Matrix(b1) - b1 isa Matrix
+            @test Matrix(b1) - b1 == b1 - b1
+            @test_throws DimensionMismatch Matrix(b1) - b3
+
+            # If the AbstractMatrix is diagonal, we should return a BlockDiagonal.
+            # Test the StridedMatrix method.
+            @test Matrix(Diagonal(b1)) - b1 isa BlockDiagonal  # StridedMatrix
+            @test b1 - Matrix(Diagonal(b1)) isa BlockDiagonal
+
+            # Test the AbstractMatrix method.
+            @test Matrix(Diagonal(b1))' - b1 isa BlockDiagonal
+            @test b1 - Matrix(Diagonal(b1))' isa BlockDiagonal
+        end
+
+        @testset "BlockDiagonal - Diagonal" begin
+            D = Diagonal(randn(rng, N))
+            D′ = Diagonal(randn(rng, N + N1))
+
+            @test b1 - D isa BlockDiagonal
+            @test b1 - D == Matrix(b1) - D
+            @test_throws DimensionMismatch b1 - D′
+
+            # Diagonal + BlockDiagonal
+            @test D - b1 isa BlockDiagonal
+            @test D - b1 == D - Matrix(b1)
+            @test_throws DimensionMismatch D′ - b1
+        end
+
+        @testset "BlockDiagonal - UniformScaling" begin
+            @test b1 - 5I isa BlockDiagonal
+            @test b1 - 5I == Matrix(b1) - 5I
+
+            # UniformScaling - BlockDiagonal
+            @test 5I - b1 isa BlockDiagonal
+            @test 5I - b1 == 5I - Matrix(b1)
+        end
+    end  # Subtraction
+
+    @testset "Opposite" begin
+        @test -b1 isa BlockDiagonal
+        @test -b1 == -Matrix(b1)
+    end
+
     @testset "Multiplication" begin
 
         @testset "BlockDiagonal * BlockDiagonal" begin

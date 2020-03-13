@@ -63,6 +63,61 @@ function Base.:+(B::BlockDiagonal, M::UniformScaling)
     return BlockDiagonal([block + M for block in blocks(B)])
 end
 
+# Opposite
+function Base.:-(B1::BlockDiagonal)
+    return BlockDiagonal(broadcast(-, (blocks(B1))))
+end
+
+## Subtraction
+# TODO make type stable, maybe via Broadcasting?
+function Base.:-(B1::BlockDiagonal, B2::BlockDiagonal)
+    if isequal_blocksizes(B1, B2)
+        return BlockDiagonal(blocks(B1) .- blocks(B2))
+    else
+        return Matrix(B1) - Matrix(B2)
+    end
+end
+
+Base.:-(M::AbstractMatrix, B::BlockDiagonal) = isdiag(M) ? Diagonal(M) - B : M - Matrix(B)
+Base.:-(B::BlockDiagonal, M::AbstractMatrix) = isdiag(M) ? B - Diagonal(M) : Matrix(B) - M
+
+function Base.:-(B::BlockDiagonal, M::StridedMatrix)
+    size(B) == size(M) || throw(DimensionMismatch("dimensions must match"))
+    if isdiag(M)
+        return B + Diagonal(M)
+    end
+    A = copy(M)
+    row = 1
+    for (j, block) in enumerate(blocks(B))
+        nrows = size(block, 1)
+        rows = row:(row + nrows-1)
+        A[rows, rows] .-= block
+        row += nrows
+    end
+    return A
+end
+
+function Base.:-(B::BlockDiagonal, M::Diagonal)::BlockDiagonal
+    size(B) == size(M) || throw(DimensionMismatch("dimensions must match"))
+    A = copy(B)
+    d = diag(M)
+    row = 1
+    for (p, block) in enumerate(blocks(B))
+        nrows = size(block, 1)
+        rows = row:(row + nrows-1)
+        for (i, r) in enumerate(rows)
+            getblock(A, p)[i, i] -= d[r]
+        end
+        row += nrows
+    end
+    return A
+end
+
+Base.:-(M::UniformScaling, B::BlockDiagonal) = - (B - M)
+function Base.:-(B::BlockDiagonal, M::UniformScaling)
+    return BlockDiagonal([block - M for block in blocks(B)])
+end
+
 ## Multiplication
 Base.:*(n::Number, B::BlockDiagonal) = B * n
 Base.:*(B::BlockDiagonal, n::Number) = BlockDiagonal(n .* blocks(B))
