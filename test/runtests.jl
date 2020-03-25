@@ -1,5 +1,4 @@
 using BlockDiagonalMatrices
-using Documenter
 using Test
 
 @testset "BlockDiagonalMatrices" begin
