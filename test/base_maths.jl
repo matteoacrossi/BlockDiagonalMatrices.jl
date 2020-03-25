@@ -1,4 +1,4 @@
-using BlockDiagonals
+using BlockDiagonalMatrices
 using LinearAlgebra: Diagonal, I
 using Random
 using Test

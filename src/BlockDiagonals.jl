@@ -1,4 +1,4 @@
-module BlockDiagonals
+module BlockDiagonalMatrices
 
 using Base: @propagate_inbounds
 using FillArrays: Zeros

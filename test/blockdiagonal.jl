@@ -1,5 +1,5 @@
-using BlockDiagonals
-using BlockDiagonals: isequal_blocksizes
+using BlockDiagonalMatrices
+using BlockDiagonalMatrices: isequal_blocksizes
 using Random
 using Test
 

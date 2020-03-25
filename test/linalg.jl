@@ -1,5 +1,5 @@
-using BlockDiagonals
-using BlockDiagonals: svd_blockwise
+using BlockDiagonalMatrices
+using BlockDiagonalMatrices: svd_blockwise
 using LinearAlgebra
 using Random
 using Test

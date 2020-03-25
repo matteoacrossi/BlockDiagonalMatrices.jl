@@ -1,8 +1,8 @@
-using BlockDiagonals
+using BlockDiagonalMatrices
 using Documenter
 using Test
 
-@testset "BlockDiagonals" begin
+@testset "BlockDiagonalMatrices" begin
     include("blockdiagonal.jl")
     include("base_maths.jl")
     include("linalg.jl")
