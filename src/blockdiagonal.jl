@@ -151,3 +151,8 @@ function Base.copy!(dest::BlockDiagonal, src::BlockDiagonal)
     end
     return dest
 end
+
+function Base.replace_in_print_matrix(A::BlockDiagonal, i::Integer, j::Integer, s::AbstractString)
+    p, i, j = _block_indices(A, i, j)
+    p > 0 ? s : Base.replace_with_centered_mark(s)
+end
