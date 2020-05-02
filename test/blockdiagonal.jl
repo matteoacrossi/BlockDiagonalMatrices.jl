@@ -50,6 +50,12 @@ using Test
             @test size.(blocks(similar(b1))) == size.(blocks(b1))
         end
 
+        @testset "zero" begin
+            @test typeof(zero(b1)) == typeof(b1)
+            @test size.(blocks(zero(b1))) == size.(blocks(b1))
+            @test zero(b1) == 0 * b1
+        end
+
         @testset "setindex!" begin
             X = BlockDiagonal([rand(Float32, 5, 5), rand(Float32, 3, 3)])
             X[10] = Int(10)

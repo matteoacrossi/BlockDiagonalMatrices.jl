@@ -152,7 +152,16 @@ function Base.copy!(dest::BlockDiagonal, src::BlockDiagonal)
     return dest
 end
 
+function Base.zero(A::BlockDiagonal{Tv,Ta}) where {Tv, Ta}
+    bv = Vector{Ta}()
+    for b in blocks(A)
+        push!(bv, zero(b))
+    end
+    return BlockDiagonal{Tv,Ta}(bv)
+end
+
 function Base.replace_in_print_matrix(A::BlockDiagonal, i::Integer, j::Integer, s::AbstractString)
     p, i, j = _block_indices(A, i, j)
     p > 0 ? s : Base.replace_with_centered_mark(s)
 end
+
