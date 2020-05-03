@@ -152,6 +152,12 @@ function Base.copy!(dest::BlockDiagonal, src::BlockDiagonal)
     return dest
 end
 
+function Base.copy(src::BlockDiagonal)
+    dest = similar(src)
+    copy!(dest, src)
+    return dest
+end
+
 function Base.zero(A::BlockDiagonal{Tv,Ta}) where {Tv, Ta}
     bv = Vector{Ta}()
     for b in blocks(A)
